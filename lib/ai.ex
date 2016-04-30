@@ -1,30 +1,38 @@
 defmodule Ai do
   def move_on(board, marker) do
-    {move, _} = minimax(board, marker)
+    {move, _alpha, _beta} = minimax(board, marker)
     Board.make_move(board, marker, move)
   end
 
-  def minimax(board, marker) do
+  def minimax(board, mark), do: minimax(board, mark, -100, 100)
+  def minimax(board, marker, alpha, beta) do
     move = Board.last_move(board)
 
     if Board.done?(board) do
-      {move, score(board, marker)}
+      {move, score(board, marker), beta}
     else
-      Enum.reduce(Board.available_moves(board), {-1, -100}, fn(move, acc) ->
+      Enum.reduce_while(Board.available_moves(board), {-1, alpha, beta}, fn(move, acc) ->
         next = Board.make_move(board, marker, move)
-        {_, score} = minimax(next, opponent(marker)) |> negate
-        {best_move, best_score} = acc
+        {_, score, _beta} = minimax(next, opponent(marker), -beta, -alpha) |> negate
 
-        if best_score >= score do
-          {best_move, best_score}
+        {best_move, best_score, current_beta} = acc
+
+        gamma = max(alpha, score)
+
+        if gamma > beta do
+          {:halt, {move, score, beta}}
         else
-          {move, score}
+          if best_score >= score do
+            {:cont, {best_move, best_score, current_beta}}
+          else
+            {:cont, {move, score, beta}}
+          end
         end
       end)
     end
   end
 
-  defp negate({move, score}), do: {move, -score}
+  defp negate({move, score, b}), do: {move, -score, b}
 
   defp opponent(:x), do: :o
   defp opponent(:o), do: :x

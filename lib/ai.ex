@@ -1,6 +1,6 @@
 defmodule Ai do
   def move_on(board, marker) do
-    {move, _alpha, _beta} = minimax(board, marker)
+    {move, _, _} = minimax(board, marker)
     Board.make_move(board, marker, move)
   end
 
@@ -11,25 +11,33 @@ defmodule Ai do
     if Board.done?(board) do
       {move, score(board, marker), beta}
     else
-      Enum.reduce_while(Board.available_moves(board), {-1, alpha, beta}, fn(move, acc) ->
-        next = Board.make_move(board, marker, move)
-        {_, score, _beta} = minimax(next, opponent(marker), -beta, -alpha) |> negate
-
-        {best_move, best_score, current_beta} = acc
-
-        gamma = max(alpha, score)
-
-        if gamma > beta do
-          {:halt, {move, score, beta}}
-        else
-          if best_score >= score do
-            {:cont, {best_move, best_score, current_beta}}
-          else
-            {:cont, {move, score, beta}}
-          end
-        end
-      end)
+      heuristic(board, marker, alpha, beta)
     end
+  end
+
+  defp heuristic(board, marker, alpha, beta) do
+    board
+    |> Board.available_moves
+    |> Enum.reduce_while({-1, alpha, beta}, &( find_best_move(board, &1, marker, &2)))
+  end
+
+  defp  find_best_move(board, move, marker, {_, alpha, beta} = acc) do
+    score = score_unfinished(board, marker, move, alpha, beta)
+    potential = {move, score, beta}
+
+    cond do
+      max(alpha, score) > beta -> {:halt, potential}
+      alpha >= score -> {:cont, acc}
+      true -> {:cont, potential}
+    end
+  end
+
+  defp score_unfinished(board, marker, move, alpha, beta) do
+    board
+    |> Board.make_move(marker, move)
+    |> minimax(opponent(marker), -beta, -alpha)
+    |> negate
+    |> elem(1)
   end
 
   defp negate({move, score, b}), do: {move, -score, b}
@@ -41,7 +49,6 @@ defmodule Ai do
     case Board.winner(board) do
       ^mark -> count_moves(board)
       :draw -> 0
-      :no_winner -> raise "How did we get here?"
       _ -> -count_moves(board)
     end
   end

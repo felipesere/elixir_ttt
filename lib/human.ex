@@ -1,28 +1,32 @@
 defmodule Human do
-  defstruct [:io, :move]
+  defstruct [:io, :marker]
 
-  def create(marker, [io: io]) do
-    %Human{io: io, move: fn(board) -> move_on(board, marker, io) end}
+  def create([marker: marker, io: io]) do
+    %Human{io: io, marker: marker}
   end
+end
 
-  def move_on(board, marker, io) do
-    move = get_move(board, io)
+defimpl Player, for: Human do
 
-    Board.make_move(board, marker, move)
+  def make_move(%Human{marker: marker, io: io} = human, board) do
+    case get_move(board, io) do
+      {:ok, move} -> Board.make_move(board, marker, move)
+      _ -> make_move(human, board)
+    end
   end
 
   defp get_move(board, io) do
     board
     |> io.get_move
-    |> validate(board, io)
+    |> validate(board)
   end
 
-  defp validate(move, board, io) do
+  defp validate(move, board) do
     moves = board |> Board.available_moves
 
     cond do
-      move in moves -> move
-      true -> get_move(board, io)
+      move in moves -> {:ok, move}
+      true -> :invalid
     end
   end
 end

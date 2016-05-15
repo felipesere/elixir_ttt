@@ -17,8 +17,8 @@ defmodule HumanTest do
                | | | |
                | | | |)
 
-    human = Human.create(:x, io: NotTheDisplay)
-    b = human.move.(board)
+    human = Human.create(marker: :x, io: NotTheDisplay)
+    b = Player.make_move(human, board)
     assert b.last_move == 1
   end
 end

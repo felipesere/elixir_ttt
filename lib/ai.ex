@@ -1,7 +1,11 @@
 defmodule Ai do
-  defstruct [:move]
+  defstruct [:marker]
 
-  def create(marker), do: %Ai{move: fn(board) ->  move_on(board, marker) end}
+  def create(marker), do: %Ai{marker: marker}
+end
+
+defimpl Player, for: Ai do
+  def make_move(%Ai{marker: marker}, board), do: move_on(board, marker)
 
   def move_on(board, marker) do
     {move, _, _} = minimax(board, marker)

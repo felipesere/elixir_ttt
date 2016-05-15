@@ -6,7 +6,7 @@ defmodule Board do
     %Board{ elements: elements, last_move: nil}
   end
   def create(dimension) do
-    elements = for _ <- 1..dimension*dimension, do: nil
+    elements = for x <- 1..dimension*dimension, do: x
     %Board{ elements: elements, last_move: nil }
   end
 
@@ -15,11 +15,13 @@ defmodule Board do
   def available_moves(%Board{ elements: elements}), do: available_moves(elements)
   def available_moves(elements) do
     elements
-    |> Enum.with_index
-    |> Enum.filter(&keep_empties/1)
-    |> Enum.map(&just_index/1)
+    |> Enum.filter(&remove_marks/1)
     |> Enum.shuffle
   end
+
+  defp remove_marks(:x), do: false
+  defp remove_marks(:o), do: false
+  defp remove_marks(_), do: true
 
   def winner(%Board{ elements: elements}) do
     elements
@@ -61,7 +63,8 @@ defmodule Board do
     rows(elements) ++ colums(elements) ++ diagonals(elements)
   end
 
-  defp rows(elements), do: Enum.chunk(elements, 3)
+  def rows(%Board{elements: elements}), do: rows(elements)
+  def rows(elements), do: Enum.chunk(elements, 3)
 
   defp colums(elements) do
     elements
@@ -92,30 +95,26 @@ defmodule Board do
   defp all_same?([a,a,a]), do: true
   defp all_same?(_), do: false
 
-  defp keep_empties({nil, _}), do: true
-  defp keep_empties(_), do: false
-
-  defp just_index({_, index}), do: index
-
   def make_move(%Board{ elements: elements}, marker, move) do
-    %Board{ last_move: move, elements: List.update_at(elements, move, fn(_) -> marker end) }
+    %Board{ last_move: move, elements: List.update_at(elements, move, fn(n) -> marker end) }
   end
 
   def sigil_b(string,_opts) do
     string
-    |> String.split("\n")
-    |> Enum.map(&String.strip/1)
-    |> Enum.flat_map(&parse/1)
+    |> to_list
+    |> Enum.with_index
+    |> Enum.map(&parse/1)
     |> Board.create
   end
 
-  defp parse(string), do: parse(string, [])
-  defp parse("|", acc), do: Enum.reverse(acc)
-  defp parse(<<"|", element :: binary-size(1)>> <> remainder, acc) do
-    parse(remainder, [convert(element) | acc])
+  def to_list(string) do
+    string
+    |> String.split("\n")
+    |> Enum.map(&String.strip/1)
+    |> Enum.flat_map(&(String.split(&1,"|")))
+    |> Enum.reject(&(&1 == ""))
   end
 
-  defp convert("x"), do: :x
-  defp convert("o"), do: :o
-  defp convert(_), do: nil
+  defp parse({" ", idx}), do: idx
+  defp parse({mark, _}), do: String.to_atom(mark)
 end

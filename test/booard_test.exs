@@ -7,6 +7,15 @@ defmodule BoardTest do
     assert board |> Board.available_moves |> Enum.count == 9
   end
 
+  test "it knows when a board is not yet done" do
+    refute Board.done?(Board.create())
+  end
+
+  test "it knows when a board is done for winner" do
+    board = Board.create() |> make_moves([0,1,2], :x)
+    assert Board.done?(board)
+  end
+
   test "can make a move" do
     board = Board.create() |> Board.make_move(:x, 3)
     assert board |> Board.available_moves |> Enum.count == 8
@@ -53,6 +62,14 @@ defmodule BoardTest do
     board = Board.create() |> make_moves([0, 1, 2], :x)
     assert board |> Board.winner == :x
   end
+
+  test "creates board based on sigil" do
+    board = ~b"|x| |o|
+               |x|x| |
+               |o| |o|"
+    assert board |> Board.available_moves |> Enum.sort == [1,5,7]
+  end
+
 
   def make_moves(board, moves, mark) do
     Enum.reduce(moves, board, &(Board.make_move(&2, mark, &1)))

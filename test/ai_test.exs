@@ -20,6 +20,22 @@ defmodule AiTest do
     assert result.last_move == 5
   end
 
+  test "it takes corners" do
+    initial = ~b(|o| | |
+                 | |o| |
+                 | | |x|)
+    result = Ai.move_on(initial, :x)
+    assert Enum.member?([2,6], result.last_move)
+  end
+
+  test "it takes edges" do
+    initial = ~b(|o| | |
+                 | |x| |
+                 | | |o|)
+    result = Ai.move_on(initial, :x)
+    assert Enum.member?([1, 3, 5, 7], result.last_move)
+  end
+
   test "it scores a win with positive points" do
     board = ~b"| | | |
                |o|o|o|

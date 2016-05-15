@@ -1,4 +1,8 @@
 defmodule Ai do
+  defstruct [:move]
+
+  def create(marker), do: %Ai{move: fn(board) ->  move_on(board, marker) end}
+
   def move_on(board, marker) do
     {move, _, _} = minimax(board, marker)
     Board.make_move(board, marker, move)
@@ -24,6 +28,7 @@ defmodule Ai do
   defp  find_best_move(board, move, marker, {_, alpha, beta} = acc) do
     score = score_unfinished(board, marker, move, alpha, beta)
     potential = {move, score, beta}
+
 
     cond do
       max(alpha, score) > beta -> {:halt, potential}

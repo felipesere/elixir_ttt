@@ -11,7 +11,5 @@ defmodule Game do
     %Game{ players: [second, first], board: new_board}
   end
 
-  defp over?(%Game{board: board}) do
-    Board.has_winner?(board) || Board.has_draw?(board)
-  end
+  defp over?(%Game{board: board}), do: Board.done?(board)
 end

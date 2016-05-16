@@ -70,7 +70,6 @@ defmodule BoardTest do
     assert board |> Board.available_moves |> Enum.sort == [1,5,7]
   end
 
-
   def make_moves(board, moves, mark) do
     Enum.reduce(moves, board, &(Board.make_move(&2, mark, &1)))
   end

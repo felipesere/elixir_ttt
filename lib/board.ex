@@ -27,7 +27,7 @@ defmodule Board do
     elements
     |> lines()
     |> Enum.find(:no_winner, &all_same?/1)
-    |> extract_winner
+    |> extract_winner()
     |> detect_draw(elements)
   end
 
@@ -96,6 +96,6 @@ defmodule Board do
   defp all_same?(_), do: false
 
   def make_move(%Board{ elements: elements}, marker, move) do
-    %Board{ last_move: move, elements: List.update_at(elements, move, fn(n) -> marker end) }
+    %Board{ last_move: move, elements: List.update_at(elements, move, fn(_) -> marker end) }
   end
 end

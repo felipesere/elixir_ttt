@@ -8,7 +8,7 @@ defmodule Display do
     board
   end
 
-  def get_move(board) do
+  def get_move(_) do
     3
   end
 

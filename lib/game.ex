@@ -6,7 +6,7 @@ defmodule Game do
   end
 
   def turn(%Game{ players: [first, second], board: board}) do
-    new_board = first.move(board)
+    new_board = Player.make_move(first, board)
 
     %Game{ players: [second, first], board: new_board}
   end

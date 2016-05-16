@@ -2,22 +2,13 @@ defmodule HumanTest do
   use ExUnit.Case
   import BoardSigil, only: [sigil_b: 2]
 
-  defmodule NotTheDisplay do
-    def render(board) do
-      board
-    end
-
-    def get_move(_) do
-      1
-    end
-  end
 
   test "can make a move" do
     board = ~b(| | | |
                | | | |
                | | | |)
 
-    human = Human.create(marker: :x, io: NotTheDisplay)
+    human = Human.create(marker: :x, io: NotTheRealDisplay)
     b = Player.make_move(human, board)
     assert b.last_move == 1
   end

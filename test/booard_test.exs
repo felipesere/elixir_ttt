@@ -1,6 +1,6 @@
 defmodule BoardTest do
   use ExUnit.Case
-  import Board, only: [sigil_b: 2]
+  import BoardSigil, only: [sigil_b: 2]
 
   test "it has nine available moves" do
     board = Board.create()

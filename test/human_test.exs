@@ -1,6 +1,6 @@
 defmodule HumanTest do
   use ExUnit.Case
-  import Board, only: [sigil_b: 2]
+  import BoardSigil, only: [sigil_b: 2]
 
   defmodule NotTheDisplay do
     def render(board) do

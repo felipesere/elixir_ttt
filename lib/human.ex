@@ -16,8 +16,7 @@ defimpl Player, for: Human do
   end
 
   defp get_move(board, io) do
-    board
-    |> io.get_move
+    io.get_move
     |> validate(board)
   end
 

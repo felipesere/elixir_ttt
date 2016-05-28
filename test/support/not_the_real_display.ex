@@ -3,7 +3,7 @@ defmodule NotTheRealDisplay do
     board
   end
 
-  def get_move(_) do
+  def get_move() do
     1
   end
 end

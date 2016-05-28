@@ -8,6 +8,10 @@ defmodule Display do
     board
   end
 
+  def get_move({:invalid, move}) do
+    IO.puts("'#{move}' is already taken.")
+    get_move()
+  end
   def get_move() do
     IO.gets("What move do you want to make?\n>")
     |> String.strip

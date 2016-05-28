@@ -40,7 +40,12 @@ defmodule Display do
   end
 
   defp draw_row(elements) do
-    line = Enum.join(elements, "|")
-    "|" <> line <> "|"
+    elements
+    |> Enum.map(fn (x) when is_integer(x) -> x+1
+                   (x) -> x end)
+    |> Enum.join("|")
+    |> with_borders
   end
+
+  defp with_borders(line), do: "|" <> line <> "|"
 end

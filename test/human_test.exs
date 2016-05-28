@@ -9,7 +9,7 @@ defmodule HumanTest do
                | | | |)
 
     human = Human.create(marker: :x, io: NotTheRealDisplay)
-    b = Player.make_move(human, board)
-    assert b.last_move == 1
+    new_board = Player.make_move(human, board)
+    assert new_board.last_move == 1
   end
 end

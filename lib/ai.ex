@@ -33,7 +33,6 @@ defimpl Player, for: Ai do
     score = score_unfinished(board, marker, move, alpha, beta)
     potential = {move, score, beta}
 
-
     cond do
       max(alpha, score) > beta -> {:halt, potential}
       alpha >= score -> {:cont, acc}

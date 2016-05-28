@@ -1,5 +1,4 @@
 defmodule Display do
-
   def render(board) do
     board
     |> draw

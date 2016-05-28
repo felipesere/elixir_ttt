@@ -8,29 +8,29 @@ defmodule Display do
     board
   end
 
-  def get_move({:invalid, move}) do
-    IO.puts("'#{move}' is already taken.")
-    get_move()
-  end
-  def get_move() do
-    IO.gets("What move do you want to make?\n>")
-    |> String.strip
-    |> validate
-    |> message
-  end
+  def get_move(board) do
+    move = read_move
 
-  defp validate(move) do
-    case Integer.parse(move) do
-      {n, ""} -> n
-      _ -> {:not_a_number, move}
+    case Validation.validate(move, board) do
+      {:ok, m} -> m
+      {:not_a_number, move}  -> was_not_a_number(move, board)
+      {:taken, _}  -> location_already_taken(move, board)
     end
   end
 
-  def message({:not_a_number, move}) do
-    IO.puts("Sorry, '#{move}' is not a number.")
-    get_move
+  defp read_move do
+    IO.gets("What move do you want to make?\n>")
+    |> String.strip
   end
-  def message(n), do: n
+
+  defp was_not_a_number(move, board) do
+    IO.puts("Sorry, '#{move}' is not a number.")
+    get_move(board)
+  end
+  defp location_already_taken(move, board) do
+    IO.puts("Sorry, move '#{move}' is already taken.")
+    get_move(board)
+  end
 
   def draw(board) do
     board

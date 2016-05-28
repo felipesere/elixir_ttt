@@ -7,6 +7,9 @@ defmodule BoardSigil do
     |> Board.create
   end
 
+  defp parse({" ", idx}), do: idx
+  defp parse({mark, _}), do: String.to_atom(mark)
+
   def to_list(string) do
     string
     |> String.split("\n")
@@ -14,7 +17,4 @@ defmodule BoardSigil do
     |> Enum.flat_map(&(String.split(&1,"|")))
     |> Enum.reject(&(&1 == ""))
   end
-
-  defp parse({" ", idx}), do: idx
-  defp parse({mark, _}), do: String.to_atom(mark)
 end

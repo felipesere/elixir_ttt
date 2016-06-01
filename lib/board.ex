@@ -6,7 +6,7 @@ defmodule Board do
     %Board{ elements: elements, last_move: nil}
   end
   def create(dimension) do
-    elements = for x <- 1..dimension*dimension, do: x
+    elements = for x <- 0..(dimension*dimension-1), do: x
     %Board{ elements: elements, last_move: nil }
   end
 

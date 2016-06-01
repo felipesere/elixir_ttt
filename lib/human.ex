@@ -1,7 +1,7 @@
 defmodule Human do
   defstruct [:io, :marker]
 
-  def create([marker: marker, io: io]) do
+  def create(marker, io) do
     %Human{io: io, marker: marker}
   end
 end
@@ -10,13 +10,13 @@ defimpl Player, for: Human do
 
   def make_move(%Human{marker: marker, io: io} = human, board) do
     case get_move(board, io) do
-      {:ok, move} -> Board.make_move(board, marker, move)
+      {:ok, move} -> {Board.make_move(board, marker, move), human}
       _ -> make_move(human, board)
     end
   end
 
   defp get_move(board, io) do
-    io.get_move
+    io.get_move(board)
     |> validate(board)
   end
 

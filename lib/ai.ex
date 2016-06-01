@@ -5,7 +5,7 @@ defmodule Ai do
 end
 
 defimpl Player, for: Ai do
-  def make_move(%Ai{marker: marker}, board), do: move_on(board, marker)
+  def make_move(%Ai{marker: marker} = ai, board), do: {move_on(board, marker), ai}
 
   def move_on(board, marker) do
     {move, _, _} = minimax(board, marker)

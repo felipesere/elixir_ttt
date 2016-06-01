@@ -8,8 +8,8 @@ defmodule HumanTest do
                | | | |
                | | | |)
 
-    human = Human.create(marker: :x, io: NotTheRealDisplay)
-    new_board = Player.make_move(human, board)
+    human = Human.create(:x, NotTheRealDisplay)
+    {new_board, _} = Player.make_move(human, board)
     assert new_board.last_move == 1
   end
 end

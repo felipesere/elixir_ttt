@@ -8,6 +8,7 @@ defmodule Display do
   end
 
   def get_move(board) do
+    render(board)
     move = read_move
 
     case Validation.validate(move, board) do

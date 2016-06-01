@@ -3,9 +3,7 @@ defmodule ValidationTest do
   import BoardSigil, only: [sigil_b: 2]
 
   test "available location" do
-    board = ~b"| | | |
-               | | | |
-               | | | |"
+    board = Board.create()
 
     assert Validation.validate("1", board) == {:ok, 0}
   end

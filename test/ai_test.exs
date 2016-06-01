@@ -9,7 +9,7 @@ defmodule AiTest do
                  |o|o| |
                  | | | |)
 
-    result = Player.make_move(@ai, initial)
+    {result, _} = Player.make_move(@ai, initial)
     assert result.last_move == 5
   end
 
@@ -18,7 +18,7 @@ defmodule AiTest do
                  |o|o| |
                  | | | |)
 
-    result = Player.make_move(@ai, initial)
+    {result, _} = Player.make_move(@ai, initial)
     assert result.last_move == 5
   end
 
@@ -26,7 +26,7 @@ defmodule AiTest do
     initial = ~b(|o| | |
                  | |o| |
                  | | |x|)
-    result = Player.make_move(@ai, initial)
+    {result, _} = Player.make_move(@ai, initial)
     assert Enum.member?([2,6], result.last_move)
   end
 
@@ -34,7 +34,7 @@ defmodule AiTest do
     initial = ~b(|o| | |
                  | |x| |
                  | | |o|)
-    result = Player.make_move(@ai, initial)
+    {result, _} = Player.make_move(@ai, initial)
     assert Enum.member?([1, 3, 5, 7], result.last_move)
   end
 end
